@@ -4,7 +4,7 @@ package threaded;
  * Simples exemplo de uso de multiplas threads
  * em java, com o uso de execucao paralela
  * otimizando assim o tempo de execucao.
- * 
+ * \
  * @author Gabriel Fernandes
  */
 public class SimpleThreading implements Runnable {
@@ -51,12 +51,11 @@ public class SimpleThreading implements Runnable {
                 count++;
         }
     }
-	
-	@Override
-	public void run() {
+    
+    static void releaseTask(String message) {
 		long start = System.currentTimeMillis();
 		int primo = yieldprime(20000);
-		System.out.println("Hello i'm a thread");
+		System.out.println(message);
 		System.out.print("O 20,000 n-esimo primo: ");
 		System.out.println(primo);
 		double end = (System.currentTimeMillis() - start)/1000.0;
@@ -64,6 +63,11 @@ public class SimpleThreading implements Runnable {
 		System.out.print("tempo levado pra essa thread calcular(em segs): ");
 		System.out.println(end);
 		System.out.println();
+	}
+	
+	@Override
+	public void run() {
+		releaseTask("Hello i'm a thread");
 	}
 
 	public static void main(String[] args) throws InterruptedException {
@@ -75,16 +79,7 @@ public class SimpleThreading implements Runnable {
 		Thread t2 = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				long start = System.currentTimeMillis();
-				int primo = yieldprime(20000);
-				System.out.println("Hello i'm another thread");
-				System.out.print("O 20,000 n-esimo primo: ");
-				System.out.println(primo);
-				double end = (System.currentTimeMillis() - start)/1000.0;
-				totalTime += end;
-				System.out.print("tempo levado pra essa thread calcular(em segs): ");
-				System.out.println(end);
-				System.out.println();
+				releaseTask("Hello i'm another thread");
 			}
 		});
 		Thread t3 = new Thread(new SimpleThreading());
@@ -95,16 +90,7 @@ public class SimpleThreading implements Runnable {
 		t3.start();
 
 		// uso da main thread para tambem participar do "thread pool"
-		long start = System.currentTimeMillis();
-		int primo = yieldprime(20000);
-		System.out.println("I'm the main thread");
-		System.out.print("O 20,000 n-esimo primo: ");
-		System.out.println(primo);
-		double end = (System.currentTimeMillis() - start)/1000.0;
-		totalTime += end;
-		System.out.print("tempo levado pra essa thread calcular(em segs): ");
-		System.out.println(end);
-		System.out.println();
+		releaseTask("I'm the main thread");
 
 		// aguardar todas terminarem
 		t.join();
