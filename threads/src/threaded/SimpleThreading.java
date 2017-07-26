@@ -114,8 +114,8 @@ public class SimpleThreading implements Runnable {
 		System.out.println(" segs para calcular o 20,000 n-esimo primo 4 vezes");
 		System.out.print("Teria levado ");
 		System.out.print(totalTime/coreFactor);
-		System.out.println(" segs para calcular se nao tivessemos usando os ");
-		System.out.print(coreNumber);
+		System.out.println(" segs para calcular se nao tivessemos usando ");
+		System.out.print(coreNumber <= 4 ? coreNumber : 4);
 		System.out.println(" cores do seu processador para rodar "
 				+ "threads em paralelo");
 	}
