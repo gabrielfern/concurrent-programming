@@ -35,7 +35,7 @@ public class SimpleThreading implements Runnable {
     }
     
     /**
-     * Gera o n-esimo numero primo
+     * Gera o n-esimo numero primo.
      * 
      * @param target	n-esimo desejado
      * @return			o n-esimo primo
@@ -55,7 +55,7 @@ public class SimpleThreading implements Runnable {
     /**
      * Realiza a entrega de uma atividade para a thread
      * que a chamar, contando tambem o tempo de execucao
-     * que essa thread faz a atividade (calcular numeros primos)
+     * que essa thread faz a atividade (calcular numeros primos).
      * 
      * @param message	mensagem para imprimir antes dos resultados
      */
