@@ -4,14 +4,14 @@ package threaded;
  * Simples exemplo de uso de multiplas threads
  * em java, com o uso de execucao paralela
  * otimizando assim o tempo de execucao.
- * \
+ *
  * @author Gabriel Fernandes
  */
 public class SimpleThreading implements Runnable {
 	static double totalTime;
 	static final int coreNumber = Runtime.getRuntime().availableProcessors();
 	static int coreFactor =  coreNumber <= 4 ? 4/coreNumber : 1;
-	
+
 	/**
 	 * Verificador de numero primo.
 	 * 
@@ -52,6 +52,13 @@ public class SimpleThreading implements Runnable {
         }
     }
     
+    /**
+     * Realiza a entrega de uma atividade para a thread
+     * que a chamar, contando tambem o tempo de execucao
+     * que essa thread faz a atividade (calcular numeros primos)
+     * 
+     * @param message	mensagem para imprimir antes dos resultados
+     */
     static void releaseTask(String message) {
 		long start = System.currentTimeMillis();
 		int primo = yieldprime(20000);
@@ -60,7 +67,7 @@ public class SimpleThreading implements Runnable {
 		System.out.println(primo);
 		double end = (System.currentTimeMillis() - start)/1000.0;
 		totalTime += end;
-		System.out.print("tempo levado pra essa thread calcular(em segs): ");
+		System.out.print("tempo levado para essa thread calcular(em segs): ");
 		System.out.println(end);
 		System.out.println();
 	}
@@ -84,6 +91,9 @@ public class SimpleThreading implements Runnable {
 		});
 		Thread t3 = new Thread(new SimpleThreading());
 
+		System.out.println("Iniciando execucao...");
+		System.out.println();
+		
 		// iniciar a execucao das threads
 		t.start();
 		t2.start();
