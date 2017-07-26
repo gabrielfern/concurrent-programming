@@ -1,2 +1,1 @@
-# concurrent-programming
-some concurrent programming examples
+Some concurrent programming examples
