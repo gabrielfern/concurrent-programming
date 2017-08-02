@@ -19,8 +19,7 @@ def grep(padrao):
         num_linhas += 1
         if exp_reg.findall(linha):
             yield str(num_linhas) + ':' + linha
-        else:
-            yield
+        else: yield
 
 
 def main():
