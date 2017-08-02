@@ -24,7 +24,7 @@ def grep(padrao):
 
 def main():
     if len(argv) < 3:
-        print('Uso: python <padrao> <arquivo>')
+        print('Uso: python grep.py <padrao> <arquivo>')
     else:
         corotina = grep(argv[1])
         for linha in open(argv[2]):
