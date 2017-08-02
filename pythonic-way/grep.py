@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Grep do unix implementado em python
+# use s* para mostrar todo o arquivo
 # Gabriel Fernandes
 
 
