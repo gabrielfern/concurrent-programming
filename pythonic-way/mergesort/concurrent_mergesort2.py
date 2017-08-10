@@ -2,6 +2,7 @@
 # Gabriel Fernandes
 
 
+from multiprocessing import Pool
 #from numba import jit
 from time import time
 import random
@@ -13,13 +14,20 @@ def sort(array, lbound=0, rbound=None):
         rbound = len(array)-1
 
     if lbound < rbound:
-        i = lbound + 1
-        while i <= rbound:
-            j = lbound
-            while j <= rbound-i:
-                merge(array, j, j + i-1, min(j-1 + 2*i, rbound))
-                j += 2*i
-            i *= 2
+        with Pool() as process_pool:
+            i = lbound + 1
+            while i <= rbound:
+                j = lbound
+                workers = []
+                while j <= rbound-i:
+                    workers.append(process_pool.apply_async(merge,
+                        args=(array, j, j + i-1, min(j-1 + 2*i, rbound)),
+                        callback=lambda t: array.__setitem__(slice(t[1], t[2]+1),
+                                                                t[0][t[1]:t[2]+1])))
+                    j += 2*i
+                for p in workers:
+                    p.wait()
+                i *= 2
 
     return array
 
@@ -49,6 +57,8 @@ def merge(array, lbound, mid, rbound):
         array[k] = aux[j]
         j += 1
         k += 1
+
+    return (array, lbound, rbound+lbound)
 
 
 def test():
