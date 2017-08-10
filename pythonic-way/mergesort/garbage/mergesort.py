@@ -11,10 +11,13 @@ def sort(array, lbound=0, rbound=None):
         rbound = len(array)-1
 
     if lbound < rbound:
-        mid = (lbound+rbound)//2
-        sort(array, lbound, mid)
-        sort(array, mid+1, rbound)
-        merge(array, lbound, mid, rbound)
+        i = lbound + 1
+        while i <= rbound:
+            j = lbound
+            while j <= rbound-i:
+                merge(array, j, j + i-1, min(j-1 + 2*i, rbound))
+                j += 2*i
+            i *= 2
 
     return array
 
@@ -64,7 +67,7 @@ def benchmark():
     start = time()
 
     list_comprehension = time()
-    arr = [i for i in range(1000000)]
+    arr = [i for i in range(1000)]
     list_comprehension = time() - list_comprehension
 
     list_copy = time()
@@ -101,5 +104,5 @@ def benchmark():
 
 
 if __name__=='__main__':
-    #print(test())
+    #test()
     benchmark()

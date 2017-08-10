@@ -2,39 +2,43 @@
 # Gabriel Fernandes
 
 
-from multiprocessing import Pool, Manager, Array
-#from numba import jit
 from time import time
-import random
+from random import shuffle
+from multiprocessing import Pool, cpu_count
 
 
-#@jit
 def sort(array, lbound=0, rbound=None):
     if rbound == None:
         rbound = len(array)-1
 
-    manager = Manager()
-    interprocess_list = manager.list(array)
-    process_pool = Pool()
-
     if lbound < rbound:
-        i = lbound + 1
-        workers = []
-        while i <= rbound:
-            j = lbound
-            while j <= rbound-i:
-                workers.append(process_pool.apply_async(merge,
-                    args=(interprocess_list, j, j + i-1, min(j-1 + 2*i, rbound))))
-                j += 2*i
+        with Pool() as pool:
+            leng = rbound-lbound + 1
+            leng = leng if leng%2 == 0 else leng + 1
+            works = [(i, min(i+leng//cpu_count()-1, rbound)) for i in range(lbound, rbound, leng//cpu_count())]
+            workers = []
+            for w in works:
+                workers.append(pool.apply_async(concurrent_sort,
+                                args=(array, w[0], w[1]),
+                                callback=lambda t: array.__setitem__(slice(t[1], t[2]+1),
+                                                                            t[0][t[1]:t[2]+1])))
             for p in workers:
                 p.wait()
-            i *= 2
+            merge(array, works[0][0], works[0][1], works[1][1])
 
-    array[:] = list(interprocess_list)
     return array
 
 
-#@jit
+def concurrent_sort(array, lbound, rbound):
+    if lbound < rbound:
+        mid = (lbound+rbound)//2
+        concurrent_sort(array, lbound, mid)
+        concurrent_sort(array, mid+1, rbound)
+        merge(array, lbound, mid, rbound)
+
+        return (array, lbound, rbound)
+
+
 def merge(array, lbound, mid, rbound):
     aux = array[lbound:rbound+1]
     mid -= lbound
@@ -60,6 +64,8 @@ def merge(array, lbound, mid, rbound):
         j += 1
         k += 1
 
+    return (array, lbound, rbound+lbound)
+
 
 def test():
     assert sort([4,3,2,1]) == [1,2,3,4]
@@ -69,7 +75,7 @@ def test():
     arr = list(range(100))
     for _ in arr:
         tmp = arr[:]
-        random.shuffle(tmp)
+        shuffle(tmp)
         assert id(arr) != id(tmp)
         assert sort(tmp) == arr
 
@@ -80,7 +86,7 @@ def benchmark():
     start = time()
 
     list_comprehension = time()
-    arr = [i for i in range(10**2)]
+    arr = [i for i in range(1000000)]
     list_comprehension = time() - list_comprehension
 
     list_copy = time()
@@ -88,7 +94,7 @@ def benchmark():
     list_copy = time() - list_copy
 
     shuffle_time = time()
-    random.shuffle(arr)
+    shuffle(arr)
     shuffle_time = time() - shuffle_time
 
     not_equal_time = time()
@@ -113,8 +119,9 @@ def benchmark():
     print('Equal time: {:18.6f} secs'.format(equal_time))
     print('\033[1;31m', end='')
     print('Total time: {:18.6f} secs'.format(time()-start))
+    print('\033[;1m', end='')
 
 
 if __name__=='__main__':
-    #test()
+    #print(test())
     benchmark()

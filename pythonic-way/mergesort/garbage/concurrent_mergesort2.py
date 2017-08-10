@@ -2,13 +2,11 @@
 # Gabriel Fernandes
 
 
-from multiprocessing import Pool
-#from numba import jit
 from time import time
-import random
+from random import shuffle
+from multiprocessing import Pool
 
 
-#@jit
 def sort(array, lbound=0, rbound=None):
     if rbound == None:
         rbound = len(array)-1
@@ -32,7 +30,6 @@ def sort(array, lbound=0, rbound=None):
     return array
 
 
-#@jit
 def merge(array, lbound, mid, rbound):
     aux = array[lbound:rbound+1]
     mid -= lbound
@@ -69,7 +66,7 @@ def test():
     arr = list(range(100))
     for _ in arr:
         tmp = arr[:]
-        random.shuffle(tmp)
+        shuffle(tmp)
         assert id(arr) != id(tmp)
         assert sort(tmp) == arr
 
@@ -80,7 +77,7 @@ def benchmark():
     start = time()
 
     list_comprehension = time()
-    arr = [i for i in range(5000)]
+    arr = [i for i in range(1000)]
     list_comprehension = time() - list_comprehension
 
     list_copy = time()
@@ -88,7 +85,7 @@ def benchmark():
     list_copy = time() - list_copy
 
     shuffle_time = time()
-    random.shuffle(arr)
+    shuffle(arr)
     shuffle_time = time() - shuffle_time
 
     not_equal_time = time()
@@ -113,6 +110,7 @@ def benchmark():
     print('Equal time: {:18.6f} secs'.format(equal_time))
     print('\033[1;31m', end='')
     print('Total time: {:18.6f} secs'.format(time()-start))
+    print('\033[;1m', end='')
 
 
 if __name__=='__main__':
