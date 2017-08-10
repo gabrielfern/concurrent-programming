@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Gabriel Fernandes
 
 
@@ -15,13 +15,15 @@ def sort(array, lbound=0, rbound=None):
         with Pool(processes=2) as pool:
             leng = rbound-lbound + 1
             leng = leng if leng%2 == 0 else leng + 1
-            works = [(i, min(i+leng//2-1, rbound)) for i in range(lbound, rbound, leng//2)]
+            works = [(i, min(i+leng//2-1, rbound))
+                        for i in range(lbound, rbound, leng//2)]
             workers = []
             for w in works:
                 workers.append(pool.apply_async(concurrent_sort,
                                 args=(array, w[0], w[1]),
-                                callback=lambda t: array.__setitem__(slice(t[1], t[2]+1),
-                                                                            t[0][t[1]:t[2]+1])))
+                                callback=lambda t: array.
+                                            __setitem__(slice(t[1], t[2]+1),
+                                                        t[0][t[1]:t[2]+1])))
             for p in workers:
                 p.wait()
             merge(array, works[0][0], works[0][1], works[1][1])
