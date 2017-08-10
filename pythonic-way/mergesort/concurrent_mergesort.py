@@ -4,7 +4,7 @@
 
 from time import time
 from random import shuffle
-from multiprocessing import Pool, cpu_count
+from multiprocessing import Pool
 
 
 def sort(array, lbound=0, rbound=None):
@@ -15,7 +15,7 @@ def sort(array, lbound=0, rbound=None):
         with Pool(processes=2) as pool:
             leng = rbound-lbound + 1
             leng = leng if leng%2 == 0 else leng + 1
-            works = [(i, min(i+leng//cpu_count()-1, rbound)) for i in range(lbound, rbound, leng//cpu_count())]
+            works = [(i, min(i+leng//2-1, rbound)) for i in range(lbound, rbound, leng//2)]
             workers = []
             for w in works:
                 workers.append(pool.apply_async(concurrent_sort,
