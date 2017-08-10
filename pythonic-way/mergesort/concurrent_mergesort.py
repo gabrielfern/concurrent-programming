@@ -12,7 +12,7 @@ def sort(array, lbound=0, rbound=None):
         rbound = len(array)-1
 
     if lbound < rbound:
-        with Pool() as pool:
+        with Pool(processes=2) as pool:
             leng = rbound-lbound + 1
             leng = leng if leng%2 == 0 else leng + 1
             works = [(i, min(i+leng//cpu_count()-1, rbound)) for i in range(lbound, rbound, leng//cpu_count())]
@@ -76,7 +76,7 @@ def test():
     for _ in arr:
         tmp = arr[:]
         shuffle(tmp)
-        assert id(arr) != id(tmp)
+        assert id(tmp) != id(arr)
         assert sort(tmp) == arr
 
     return 'test pass!'

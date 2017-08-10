@@ -54,7 +54,7 @@ def test():
     for _ in arr:
         tmp = arr[:]
         shuffle(tmp)
-        assert id(arr) != id(tmp)
+        assert id(tmp) != id(arr)
         assert sort(tmp) == arr
 
     return 'test pass!'
