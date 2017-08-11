@@ -4,7 +4,7 @@
 
 from time import time
 from random import shuffle
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 
 
 def sort(array, lbound=0, rbound=None):
@@ -12,11 +12,26 @@ def sort(array, lbound=0, rbound=None):
         rbound = len(array)-1
 
     if lbound < rbound:
-        with Pool(processes=2) as pool:
+        def calc(leng, cpus):
+            l = []
+            for i in range(0, leng, leng//cpus):
+                l.append([i, min(i + leng//cpus-1, leng-1)])
+            if len(l) > cpus:
+                l[-2][1] = l[-1][1]
+                l.pop()
+            return l
+
+        def inner_merge(array, intervals, lbound, rbound):
+            if lbound < rbound:
+                mid = (lbound+rbound)//2
+                inner_merge(array, intervals, lbound, mid)
+                inner_merge(array, intervals, mid+1, rbound)
+                merge(array, intervals[lbound][0], intervals[mid][1], intervals[rbound][1])
+
+        with Pool() as pool:
             leng = rbound-lbound + 1
-            leng = leng if leng%2 == 0 else leng + 1
-            works = [(i, min(i+leng//2-1, rbound))
-                        for i in range(lbound, rbound, leng//2)]
+            works = calc(leng, cpu_count())
+
             workers = []
             for w in works:
                 workers.append(pool.apply_async(concurrent_sort,
@@ -26,7 +41,8 @@ def sort(array, lbound=0, rbound=None):
                                                         t[0][t[1]:t[2]+1])))
             for p in workers:
                 p.wait()
-            merge(array, works[0][0], works[0][1], works[1][1])
+
+            inner_merge(array, works, 0, len(works)-1)
 
     return array
 
@@ -74,8 +90,8 @@ def test():
     assert sort([4,2,3,1]) == [1,2,3,4]
     assert sort([4,5,3,2,1]) == [1,2,3,4,5]
 
-    arr = list(range(100))
-    for _ in arr:
+    arr = list(range(1000))
+    for _ in range(10):
         tmp = arr[:]
         shuffle(tmp)
         assert id(tmp) != id(arr)
@@ -88,7 +104,7 @@ def benchmark():
     start = time()
 
     list_comprehension = time()
-    arr = [i for i in range(1000000)]
+    arr = [i for i in range(2000000)]
     list_comprehension = time() - list_comprehension
 
     list_copy = time()

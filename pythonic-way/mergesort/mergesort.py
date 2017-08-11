@@ -50,8 +50,8 @@ def test():
     assert sort([4,2,3,1]) == [1,2,3,4]
     assert sort([4,5,3,2,1]) == [1,2,3,4,5]
 
-    arr = list(range(100))
-    for _ in arr:
+    arr = list(range(1000))
+    for _ in range(10):
         tmp = arr[:]
         shuffle(tmp)
         assert id(tmp) != id(arr)
@@ -64,7 +64,7 @@ def benchmark():
     start = time()
 
     list_comprehension = time()
-    arr = [i for i in range(1000000)]
+    arr = [i for i in range(2000000)]
     list_comprehension = time() - list_comprehension
 
     list_copy = time()
