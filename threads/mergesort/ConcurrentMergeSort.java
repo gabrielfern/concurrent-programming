@@ -1,5 +1,6 @@
 package mergesort;
 
+
 public class ConcurrentMergeSort<T extends Comparable<T>> implements Sorting<T> {
 
 	@Override
@@ -7,11 +8,12 @@ public class ConcurrentMergeSort<T extends Comparable<T>> implements Sorting<T> 
 		this.sort(array, 0, array.length-1);
 	}
 
+
 	@Override
 	public void sort(T[] array, int leftIndex, int rightIndex) {
 		MergeSort<T> merge = new MergeSort<>();
 		int middle = (leftIndex+rightIndex)/2;
-		
+
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {

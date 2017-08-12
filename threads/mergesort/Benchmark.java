@@ -1,10 +1,26 @@
 package mergesort;
 
+
 import java.util.Arrays;
+
 
 public class Benchmark {
 	private static final Exception AssertException = new Exception("Assertion Error!");
 	private static final int LENGTH = 10000000;
+
+
+	public static void shuffle(Object array[]) {
+		int length = array.length;
+
+		for (int i = 0; i < length; i++) {
+			int randIndex = i + (int)(Math.random() * (length - i));
+
+			Object tmp = array[i];
+			array[i] = array[randIndex];
+			array[randIndex] = tmp;
+		}
+	}
+
 
 	public static void main(String args[]) throws Exception {
 		long start = System.nanoTime();
@@ -21,7 +37,7 @@ public class Benchmark {
 		Integer[] array = new Integer[LENGTH];
 		Integer[] array2 = new Integer[LENGTH];
 		makeTime = System.nanoTime() - makeTime;
-		
+
 		if (!Arrays.equals(array, array2)) {
 			throw AssertException;
 		}
@@ -44,11 +60,11 @@ public class Benchmark {
 		long sortTime = System.nanoTime();
 		merge.sort(array);
 		sortTime = System.nanoTime() - sortTime;
-		
+
 		if (!Arrays.equals(array, array2)) {
 			throw AssertException;
 		}
-		
+
 		System.out.printf("Make time: %13.6f\n", makeTime/1000000000.0);
 		System.out.printf("Populate time: %9.6f\n", populateTime/1000000000.0);
 		System.out.printf("Shuffle time: %10.6f\n", shuffleTime/1000000000.0);
@@ -57,17 +73,5 @@ public class Benchmark {
 		System.out.print("\033[1;31m");
 		System.out.printf("Total time: %12.6f\n", (System.nanoTime()-start)/1000000000.0);
 		System.out.print("\033[;1m");
-	}
-	
-	public static void shuffle(Object array[]) {
-		int length = array.length;
-
-		for (int i = 0; i < length; i++) {
-			int randIndex = i + (int)(Math.random() * (length - i));
-			
-			Object tmp = array[i];
-			array[i] = array[randIndex];
-			array[randIndex] = tmp;
-		}
 	}
 }

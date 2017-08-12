@@ -1,6 +1,8 @@
 package mergesort;
 
+
 import java.util.Arrays;
+
 
 public class MergeSort<T extends Comparable<T>> implements Sorting<T> {
 
@@ -8,6 +10,7 @@ public class MergeSort<T extends Comparable<T>> implements Sorting<T> {
 	public void sort(T[] array) {
 		this.sort(array, 0, array.length-1);
 	}
+
 
 	@Override
 	public void sort(T[] array, int leftIndex, int rightIndex) {
@@ -18,7 +21,8 @@ public class MergeSort<T extends Comparable<T>> implements Sorting<T> {
 	        merge(array, leftIndex, mid, rightIndex);
 		}
 	}
-	
+
+
 	public void merge(T[] array,  int leftIndex, int mid, int rightIndex) {
 		T[] aux = Arrays.copyOfRange(array, leftIndex, rightIndex + 1);
 	    mid -= leftIndex;
@@ -37,7 +41,7 @@ public class MergeSort<T extends Comparable<T>> implements Sorting<T> {
 	    while (i <= mid) {
 	        array[k++] = aux[i++];
 	    }
-	    
+
 	    while (j <= rightIndex) {
 	        array[k++] = aux[j++];
 		}
