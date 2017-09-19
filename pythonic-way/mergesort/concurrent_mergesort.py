@@ -26,7 +26,8 @@ def sort(array, lbound=0, rbound=None):
                 mid = (lbound+rbound)//2
                 inner_merge(array, intervals, lbound, mid)
                 inner_merge(array, intervals, mid+1, rbound)
-                merge(array, intervals[lbound][0], intervals[mid][1], intervals[rbound][1])
+                merge(array, intervals[lbound][0], 
+                      intervals[mid][1], intervals[rbound][1])
 
         with Pool() as pool:
             leng = rbound-lbound + 1
@@ -54,7 +55,7 @@ def concurrent_sort(array, lbound, rbound):
         concurrent_sort(array, mid+1, rbound)
         merge(array, lbound, mid, rbound)
 
-        return (array, lbound, rbound)
+    return (array, lbound, rbound)
 
 
 def merge(array, lbound, mid, rbound):
